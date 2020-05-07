@@ -59,45 +59,6 @@ def get_all_files(folder,reg=None):
 
 
 
-# get all rgby *.npy image names under the folder including the subfolders
-# [in]
-#   folder:
-# [out]
-#   a list of image path of all rgby images (npy) under the folder
-#
-def get_all_rgby_files(folder,reg=None):
-    all_images = []
-
-    for root, dirs, files in os.walk(folder):
-        if len(files) > 0:
-            image_paths = []
-            for name in files:
-
-                if reg is None:
-                    if name.find('.npy') >= 0:
-                        if len(image_paths) == 0:
-                            image_paths.append(os.path.join(root, name))
-                        else:
-                            image_paths.append(os.path.join(root, name))
-                else:
-                    if name.find(reg) >= 0:
-                        if len(image_paths) == 0:
-                            image_paths.append(os.path.join(root, name))
-                        else:
-                            image_paths.append(os.path.join(root, name))
-
-
-            if len(all_images) == 0:
-                all_images = image_paths
-            else:
-                all_images = all_images + image_paths
-
-    return all_images
-
-
-
-
-
 
 
 def create_dir(directory,delete_exising_files=True):

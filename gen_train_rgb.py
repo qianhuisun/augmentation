@@ -40,6 +40,13 @@ def rotate_img(img,rotate):
     return img
 
 
+def rb_gain_from_g_or_y(rxb):
+
+    R = rxb[:, :, 0].mean()
+    X = rxb[:, :, 1].mean()
+    B = rxb[:, :, 2].mean()
+
+    return X/R, X/B
 
 
 
@@ -48,10 +55,6 @@ def rotate_img(img,rotate):
 
 
 def gen_augumented_img(filename,saveToFolder,size_label=128,stride = 64):
-
-
-    #################################################                       parameters for generating training images
-    BGR =True
 
 
     # how much space from the four boundaries of the image
@@ -63,7 +66,14 @@ def gen_augumented_img(filename,saveToFolder,size_label=128,stride = 64):
     #################################################                       generating training images <quad, bayer> pattern pair
 
     #img = cv2.imread(filename)
-    img = np.load(filename, allow_pickle = True)
+    img = np.load(filename, allow_pickle = True).astype(np.float32)
+    # apply r_gain, b_gain
+    #r_gain_from_g, b_gain_from_g = rb_gain_from_g_or_y(img)
+    #print("r_gain_from_g =", r_gain_from_g, "b_gain_from_g =", b_gain_from_g, "\n")
+    #img[:, :, 0] *= r_gain_from_g
+    #img[:, :, 2] *= b_gain_from_g
+    #img = np.clip(img, 0.0, 1.0)
+    
 
     extIdx =  filename.rfind('.')
     folderIdx =  filename.rfind('/')
@@ -108,8 +118,7 @@ def gen_augumented_img(filename,saveToFolder,size_label=128,stride = 64):
 
 def main_augumented_img(file_path,aug_img_folder):
 
-    #image_paths = util.get_all_files(file_path)
-    image_paths = util.get_all_rgby_files(file_path)
+    image_paths = util.get_all_files(file_path, reg='.npy')
             
     count =0
     total_img=len(image_paths)
